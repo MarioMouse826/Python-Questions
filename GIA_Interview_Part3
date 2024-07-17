@@ -1,0 +1,45 @@
+#5 Importing return.csv file into a Pandas DataFrame and Creating a new DataFrame for ‘Asset Manager 204, exporting this to Excel
+
+import pandas as pd
+
+# Import the CSV file into a DataFrame
+Returns_DF = pd.read_csv('return.csv')
+
+# Filter the DataFrame for 'Asset Manager 204'
+Asset_Manager_204_DF = Returns_DF[Returns_DF['Product_name'] == 'Asset Manager 204']
+
+# Export to Excel
+Asset_Manager_204_DF.to_excel('Asset_Manager_204.xlsx', index=False)
+
+#Creating a pivot table with dates as rows, product names as columns and monthly returns as values
+# Create a pivot table
+pivot_table = Returns_DF.pivot(index='Date', columns='Product_name', values='Monthly_Returns')
+
+#Generating a plot chart for Asset Manager 133 for year 2016
+import matplotlib.pyplot as plt
+
+# Filter the DataFrame for 'Asset Manager 133' and the year 2016
+Asset_Manager_133_2016 = Returns_DF[(Returns_DF['Product_name'] == 'Asset Manager 133') & (pd.to_datetime(Returns_DF['Date']).dt.year == 2016)]
+
+# Plotting the returns
+plt.figure(figsize=(10, 5))
+plt.plot(Asset_Manager_133_2016['Date'], Asset_Manager_133_2016['Monthly_Returns'])
+plt.title('Monthly Returns of Asset Manager 133 for 2016')
+plt.xlabel('Date')
+plt.ylabel('Monthly Returns')
+plt.show()
+
+#Calculating statistical measures for each asset manager
+# Group by 'Product_name' and calculate the statistics
+statistics_df = Returns_DF.groupby('Product_name')['Monthly_Returns'].agg(['mean', 'std', 'min', 'median', 'max'])
+
+# Transpose the DataFrame to have asset manager names in the columns
+statistics_df = statistics_df.transpose()
+
+#Create the bar chart with ratios for each fund
+# Assuming 'ratios' are already calculated and stored in a DataFrame called 'ratios_df'
+ratios_df.plot(kind='bar', figsize=(10, 5))
+plt.title('Ratios for Each Fund')
+plt.xlabel('Asset Manager')
+plt.ylabel('Ratio')
+plt.show()
